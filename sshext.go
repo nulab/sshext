@@ -106,16 +106,6 @@ func proveOwnership(signers []ssh.Signer, sessionID []byte, req *ssh.Request) {
 	_ = req.Reply(true, marshalSignatures(sigs))
 }
 
-func marshalSignatures(signatures []*ssh.Signature) []byte {
-	var buf bytes.Buffer
-	for _, s := range signatures {
-		raw := ssh.Marshal(s)
-		msg := wrapStruct(raw)
-		buf.Write(ssh.Marshal(msg))
-	}
-	return buf.Bytes()
-}
-
 func parsePublicKeys(p []byte) ([]ssh.PublicKey, error) {
 	var keys []ssh.PublicKey
 	for len(p) > 0 {
@@ -159,4 +149,14 @@ func signHostKey(signer ssh.Signer, key ssh.PublicKey, sessionID []byte) (*ssh.S
 		Key:         key.Marshal(),
 	}
 	return signer.Sign(rand.Reader, ssh.Marshal(msg))
+}
+
+func marshalSignatures(signatures []*ssh.Signature) []byte {
+	var buf bytes.Buffer
+	for _, s := range signatures {
+		raw := ssh.Marshal(s)
+		msg := wrapStruct(raw)
+		buf.Write(ssh.Marshal(msg))
+	}
+	return buf.Bytes()
 }
