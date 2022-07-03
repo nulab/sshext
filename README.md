@@ -30,7 +30,7 @@ if err != nil {
 // Handle hostkeys-00@openssh.com and hostkeys-prove-00@openssh.com
 reqs, err = sshext.UpdateHostKeys(sconn, reqs, signers)
 // Handle no-more-sessions@openssh.com
-reqs, noMore, err = sshext.NoMoreSessions(sconn, reqs)
+reqs, noMore, err = sshext.NoMoreSessions(reqs)
 
 go ssh.DiscardRequests(reqs)
 
