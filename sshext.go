@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"fmt"
+
 	"golang.org/x/crypto/ssh"
 )
 
@@ -61,7 +62,7 @@ func sendHostKeys(conn *ssh.ServerConn, signers []ssh.Signer) error {
 	payload := marshalPublicKeys(signers)
 	_, _, err := conn.SendRequest(requestTypeHostKeys, false, payload)
 	if err != nil {
-		return fmt.Errorf("failed to send request for hostkeys-00@openssh.com: %s", err)
+		return fmt.Errorf("failed to send request for %s: %s", requestTypeHostKeys, err)
 	}
 	return nil
 }
@@ -74,6 +75,12 @@ func marshalPublicKeys(signers []ssh.Signer) []byte {
 		buf.Write(ssh.Marshal(msg))
 	}
 	return buf.Bytes()
+}
+
+func wrapStruct(p []byte) struct{ string } {
+	return struct {
+		string
+	}{string: string(p)}
 }
 
 func proveOwnership(signers []ssh.Signer, sessionID []byte, req *ssh.Request) {
@@ -107,12 +114,6 @@ func marshalSignatures(signatures []*ssh.Signature) []byte {
 		buf.Write(ssh.Marshal(msg))
 	}
 	return buf.Bytes()
-}
-
-func wrapStruct(p []byte) struct{ string } {
-	return struct {
-		string
-	}{string: string(p)}
 }
 
 func parsePublicKeys(p []byte) ([]ssh.PublicKey, error) {
