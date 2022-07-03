@@ -1,4 +1,4 @@
-# sshext
+# sshext [![Go](https://github.com/nulab/sshext/actions/workflows/go.yml/badge.svg)](https://github.com/nulab/sshext/actions/workflows/go.yml)
 
 Implements OpenSSH's deviations and extensions to the published SSH protocol.
 
